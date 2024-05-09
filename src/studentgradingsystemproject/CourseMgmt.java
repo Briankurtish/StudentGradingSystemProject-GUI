@@ -116,6 +116,11 @@ public class CourseMgmt extends javax.swing.JFrame {
         newBtn.setForeground(new java.awt.Color(255, 255, 255));
         newBtn.setIcon(new javax.swing.ImageIcon("C:\\Users\\Cipher\\Downloads\\3443228331679654522-24.png")); // NOI18N
         newBtn.setText("New");
+        newBtn.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                newBtnActionPerformed(evt);
+            }
+        });
 
         saveBtn.setBackground(new java.awt.Color(102, 102, 102));
         saveBtn.setFont(new java.awt.Font("Segoe Print", 1, 12)); // NOI18N
@@ -284,6 +289,15 @@ public class CourseMgmt extends javax.swing.JFrame {
         new Menu().setVisible(true);
         this.dispose();
     }//GEN-LAST:event_jLabel2MouseClicked
+
+    private void newBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_newBtnActionPerformed
+        // TODO add your handling code here:
+        crs_id.setText(null);
+        crs_code.setText(null);
+        dept_id.setText(null);
+        crs_name.setText(null);
+        crs_id.requestFocus();
+    }//GEN-LAST:event_newBtnActionPerformed
 
     /**
      * @param args the command line arguments
