@@ -4,6 +4,11 @@
  */
 package studentgradingsystemproject;
 
+import java.util.Iterator;
+import java.util.List;
+import javax.swing.JOptionPane;
+import javax.swing.table.DefaultTableModel;
+
 /**
  *
  * @author Cipher
@@ -15,6 +20,7 @@ public class GradesMgmt extends javax.swing.JFrame {
      */
     public GradesMgmt() {
         initComponents();
+        refresh_JTable();
     }
 
     /**
@@ -31,25 +37,25 @@ public class GradesMgmt extends javax.swing.JFrame {
         jLabel1 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
-        std_id = new javax.swing.JTextField();
+        grade_id = new javax.swing.JTextField();
         jLabel4 = new javax.swing.JLabel();
-        std_num = new javax.swing.JTextField();
-        std_name = new javax.swing.JTextField();
+        crs_id = new javax.swing.JTextField();
+        std_id = new javax.swing.JTextField();
         jLabel5 = new javax.swing.JLabel();
         jLabel6 = new javax.swing.JLabel();
-        std_surname = new javax.swing.JTextField();
+        mid_grade = new javax.swing.JTextField();
         jLabel7 = new javax.swing.JLabel();
         jLabel8 = new javax.swing.JLabel();
         jLabel9 = new javax.swing.JLabel();
-        nationality = new javax.swing.JTextField();
-        jButton1 = new javax.swing.JButton();
-        jButton2 = new javax.swing.JButton();
-        jButton3 = new javax.swing.JButton();
+        final_grade = new javax.swing.JTextField();
+        newBtn = new javax.swing.JButton();
+        saveBtn = new javax.swing.JButton();
+        deleteBtn = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
-        jTable1 = new javax.swing.JTable();
+        gradeTable = new javax.swing.JTable();
         jLabel10 = new javax.swing.JLabel();
-        std_surname1 = new javax.swing.JTextField();
-        nationality1 = new javax.swing.JTextField();
+        hw_grade = new javax.swing.JTextField();
+        letter_grade = new javax.swing.JTextField();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
@@ -58,9 +64,9 @@ public class GradesMgmt extends javax.swing.JFrame {
         jPanel1.setBackground(new java.awt.Color(102, 102, 102));
         jPanel1.setForeground(new java.awt.Color(255, 255, 255));
 
-        jLabel1.setText("GRADES MANAGEMENT");
         jLabel1.setFont(new java.awt.Font("Segoe Print", 1, 24)); // NOI18N
         jLabel1.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel1.setText("GRADES MANAGEMENT");
 
         jLabel2.setIcon(new javax.swing.ImageIcon("C:\\Users\\Cipher\\Downloads\\17306852241586787822-128(1).png")); // NOI18N
         jLabel2.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -69,9 +75,29 @@ public class GradesMgmt extends javax.swing.JFrame {
             }
         });
 
-        jLabel3.setText("Grade ID");
         jLabel3.setFont(new java.awt.Font("Segoe Print", 0, 12)); // NOI18N
         jLabel3.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel3.setText("Grade ID");
+
+        grade_id.setBackground(new java.awt.Color(102, 102, 102));
+        grade_id.setForeground(new java.awt.Color(255, 255, 255));
+        grade_id.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                grade_idActionPerformed(evt);
+            }
+        });
+
+        jLabel4.setFont(new java.awt.Font("Segoe Print", 0, 12)); // NOI18N
+        jLabel4.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel4.setText("Course ID");
+
+        crs_id.setBackground(new java.awt.Color(102, 102, 102));
+        crs_id.setForeground(new java.awt.Color(255, 255, 255));
+        crs_id.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                crs_idActionPerformed(evt);
+            }
+        });
 
         std_id.setBackground(new java.awt.Color(102, 102, 102));
         std_id.setForeground(new java.awt.Color(255, 255, 255));
@@ -81,86 +107,79 @@ public class GradesMgmt extends javax.swing.JFrame {
             }
         });
 
-        jLabel4.setText("Course ID");
-        jLabel4.setFont(new java.awt.Font("Segoe Print", 0, 12)); // NOI18N
-        jLabel4.setForeground(new java.awt.Color(255, 255, 255));
-
-        std_num.setBackground(new java.awt.Color(102, 102, 102));
-        std_num.setForeground(new java.awt.Color(255, 255, 255));
-        std_num.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                std_numActionPerformed(evt);
-            }
-        });
-
-        std_name.setBackground(new java.awt.Color(102, 102, 102));
-        std_name.setForeground(new java.awt.Color(255, 255, 255));
-        std_name.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                std_nameActionPerformed(evt);
-            }
-        });
-
-        jLabel5.setText("Student ID");
         jLabel5.setFont(new java.awt.Font("Segoe Print", 0, 12)); // NOI18N
         jLabel5.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel5.setText("Student ID");
 
-        jLabel6.setText("Mid-Term Grade");
         jLabel6.setFont(new java.awt.Font("Segoe Print", 0, 12)); // NOI18N
         jLabel6.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel6.setText("Mid-Term Grade");
 
-        std_surname.setBackground(new java.awt.Color(102, 102, 102));
-        std_surname.setForeground(new java.awt.Color(255, 255, 255));
-        std_surname.addActionListener(new java.awt.event.ActionListener() {
+        mid_grade.setBackground(new java.awt.Color(102, 102, 102));
+        mid_grade.setForeground(new java.awt.Color(255, 255, 255));
+        mid_grade.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                std_surnameActionPerformed(evt);
+                mid_gradeActionPerformed(evt);
             }
         });
 
-        jLabel7.setText("HomeWork Grade");
         jLabel7.setFont(new java.awt.Font("Segoe Print", 0, 12)); // NOI18N
         jLabel7.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel7.setText("HomeWork Grade");
 
-        jLabel8.setText("Letter Grade");
         jLabel8.setFont(new java.awt.Font("Segoe Print", 0, 12)); // NOI18N
         jLabel8.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel8.setText("Letter Grade");
 
-        jLabel9.setText("Final Grade");
         jLabel9.setFont(new java.awt.Font("Segoe Print", 0, 12)); // NOI18N
         jLabel9.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel9.setText("Final Grade");
 
-        nationality.setBackground(new java.awt.Color(102, 102, 102));
-        nationality.setForeground(new java.awt.Color(255, 255, 255));
-        nationality.addActionListener(new java.awt.event.ActionListener() {
+        final_grade.setBackground(new java.awt.Color(102, 102, 102));
+        final_grade.setForeground(new java.awt.Color(255, 255, 255));
+        final_grade.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                nationalityActionPerformed(evt);
+                final_gradeActionPerformed(evt);
             }
         });
 
-        jButton1.setIcon(new javax.swing.ImageIcon("C:\\Users\\Cipher\\Downloads\\3443228331679654522-24.png")); // NOI18N
-        jButton1.setText("New");
-        jButton1.setBackground(new java.awt.Color(102, 102, 102));
-        jButton1.setFont(new java.awt.Font("Segoe Print", 1, 12)); // NOI18N
-        jButton1.setForeground(new java.awt.Color(255, 255, 255));
-
-        jButton2.setIcon(new javax.swing.ImageIcon("C:\\Users\\Cipher\\Downloads\\191919650316276581303769-24.png")); // NOI18N
-        jButton2.setText("Save");
-        jButton2.setBackground(new java.awt.Color(102, 102, 102));
-        jButton2.setFont(new java.awt.Font("Segoe Print", 1, 12)); // NOI18N
-        jButton2.setForeground(new java.awt.Color(255, 255, 255));
-
-        jButton3.setIcon(new javax.swing.ImageIcon("C:\\Users\\Cipher\\Downloads\\14974663671582988848-24.png")); // NOI18N
-        jButton3.setText("Delete");
-        jButton3.setBackground(new java.awt.Color(102, 102, 102));
-        jButton3.setFont(new java.awt.Font("Segoe Print", 1, 12)); // NOI18N
-        jButton3.setForeground(new java.awt.Color(255, 255, 255));
-        jButton3.addActionListener(new java.awt.event.ActionListener() {
+        newBtn.setBackground(new java.awt.Color(102, 102, 102));
+        newBtn.setFont(new java.awt.Font("Segoe Print", 1, 12)); // NOI18N
+        newBtn.setForeground(new java.awt.Color(255, 255, 255));
+        newBtn.setIcon(new javax.swing.ImageIcon("C:\\Users\\Cipher\\Downloads\\3443228331679654522-24.png")); // NOI18N
+        newBtn.setText("New");
+        newBtn.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton3ActionPerformed(evt);
+                newBtnActionPerformed(evt);
             }
         });
 
-        jTable1.setModel(new javax.swing.table.DefaultTableModel(
+        saveBtn.setBackground(new java.awt.Color(102, 102, 102));
+        saveBtn.setFont(new java.awt.Font("Segoe Print", 1, 12)); // NOI18N
+        saveBtn.setForeground(new java.awt.Color(255, 255, 255));
+        saveBtn.setIcon(new javax.swing.ImageIcon("C:\\Users\\Cipher\\Downloads\\191919650316276581303769-24.png")); // NOI18N
+        saveBtn.setText("Save");
+        saveBtn.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                saveBtnActionPerformed(evt);
+            }
+        });
+
+        deleteBtn.setBackground(new java.awt.Color(102, 102, 102));
+        deleteBtn.setFont(new java.awt.Font("Segoe Print", 1, 12)); // NOI18N
+        deleteBtn.setForeground(new java.awt.Color(255, 255, 255));
+        deleteBtn.setIcon(new javax.swing.ImageIcon("C:\\Users\\Cipher\\Downloads\\14974663671582988848-24.png")); // NOI18N
+        deleteBtn.setText("Delete");
+        deleteBtn.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                deleteBtnActionPerformed(evt);
+            }
+        });
+
+        gradeTable.setBackground(new java.awt.Color(102, 102, 102));
+        gradeTable.setFont(new java.awt.Font("Segoe Print", 0, 12)); // NOI18N
+        gradeTable.setForeground(new java.awt.Color(255, 255, 255));
+        gradeTable.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {null, null, null, null, null, null, null},
                 {null, null, null, null, null, null, null},
@@ -171,13 +190,15 @@ public class GradesMgmt extends javax.swing.JFrame {
                 " Grade ID", "Student ID", "Course ID", "MidTerm Grade", "HomeWork Grade", "Final Grade", "Letter Grade"
             }
         ));
-        jTable1.setBackground(new java.awt.Color(102, 102, 102));
-        jTable1.setDoubleBuffered(true);
-        jTable1.setFont(new java.awt.Font("Segoe Print", 0, 12)); // NOI18N
-        jTable1.setForeground(new java.awt.Color(255, 255, 255));
-        jTable1.setGridColor(new java.awt.Color(102, 102, 102));
-        jTable1.setSelectionBackground(new java.awt.Color(153, 153, 153));
-        jScrollPane1.setViewportView(jTable1);
+        gradeTable.setDoubleBuffered(true);
+        gradeTable.setGridColor(new java.awt.Color(102, 102, 102));
+        gradeTable.setSelectionBackground(new java.awt.Color(153, 153, 153));
+        gradeTable.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                gradeTableMouseClicked(evt);
+            }
+        });
+        jScrollPane1.setViewportView(gradeTable);
 
         jLabel10.setIcon(new javax.swing.ImageIcon("C:\\Users\\Cipher\\Downloads\\18786029401541068758-32.png")); // NOI18N
         jLabel10.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -186,19 +207,19 @@ public class GradesMgmt extends javax.swing.JFrame {
             }
         });
 
-        std_surname1.setBackground(new java.awt.Color(102, 102, 102));
-        std_surname1.setForeground(new java.awt.Color(255, 255, 255));
-        std_surname1.addActionListener(new java.awt.event.ActionListener() {
+        hw_grade.setBackground(new java.awt.Color(102, 102, 102));
+        hw_grade.setForeground(new java.awt.Color(255, 255, 255));
+        hw_grade.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                std_surname1ActionPerformed(evt);
+                hw_gradeActionPerformed(evt);
             }
         });
 
-        nationality1.setBackground(new java.awt.Color(102, 102, 102));
-        nationality1.setForeground(new java.awt.Color(255, 255, 255));
-        nationality1.addActionListener(new java.awt.event.ActionListener() {
+        letter_grade.setBackground(new java.awt.Color(102, 102, 102));
+        letter_grade.setForeground(new java.awt.Color(255, 255, 255));
+        letter_grade.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                nationality1ActionPerformed(evt);
+                letter_gradeActionPerformed(evt);
             }
         });
 
@@ -225,9 +246,9 @@ public class GradesMgmt extends javax.swing.JFrame {
                             .addComponent(jLabel7))
                         .addGap(35, 35, 35)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(std_num, javax.swing.GroupLayout.DEFAULT_SIZE, 143, Short.MAX_VALUE)
-                            .addComponent(std_id)
-                            .addComponent(std_surname1, javax.swing.GroupLayout.DEFAULT_SIZE, 143, Short.MAX_VALUE))
+                            .addComponent(crs_id, javax.swing.GroupLayout.DEFAULT_SIZE, 143, Short.MAX_VALUE)
+                            .addComponent(grade_id)
+                            .addComponent(hw_grade, javax.swing.GroupLayout.DEFAULT_SIZE, 143, Short.MAX_VALUE))
                         .addGap(79, 79, 79)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jLabel5)
@@ -236,22 +257,22 @@ public class GradesMgmt extends javax.swing.JFrame {
                         .addGap(29, 29, 29)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                .addComponent(std_surname, javax.swing.GroupLayout.DEFAULT_SIZE, 135, Short.MAX_VALUE)
-                                .addComponent(std_name))
-                            .addComponent(nationality, javax.swing.GroupLayout.PREFERRED_SIZE, 135, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addComponent(mid_grade, javax.swing.GroupLayout.DEFAULT_SIZE, 135, Short.MAX_VALUE)
+                                .addComponent(std_id))
+                            .addComponent(final_grade, javax.swing.GroupLayout.PREFERRED_SIZE, 135, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGap(62, 62, 62)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                             .addGroup(jPanel1Layout.createSequentialGroup()
                                 .addComponent(jLabel8)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(nationality1, javax.swing.GroupLayout.PREFERRED_SIZE, 135, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(letter_grade, javax.swing.GroupLayout.PREFERRED_SIZE, 135, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addGap(68, 68, 68))
                             .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 111, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(newBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 111, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addGap(25, 25, 25)
-                                .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(saveBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addGap(32, 32, 32)))
-                        .addComponent(jButton3, javax.swing.GroupLayout.PREFERRED_SIZE, 111, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addComponent(deleteBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 111, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addGap(0, 32, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
@@ -267,37 +288,34 @@ public class GradesMgmt extends javax.swing.JFrame {
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jLabel3)
-                            .addComponent(std_id, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(grade_id, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGap(18, 18, 18)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jLabel4)
-                            .addComponent(std_num, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                            .addComponent(crs_id, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jLabel5)
-                            .addComponent(std_name, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(std_id, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(jLabel8)
-                            .addComponent(nationality1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(letter_grade, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGap(18, 18, 18)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jLabel6)
-                            .addComponent(std_surname, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                            .addComponent(mid_grade, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
                 .addGap(1, 1, 1)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(18, 18, 18)
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                .addComponent(jLabel7)
-                                .addComponent(std_surname1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addComponent(nationality, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabel9)))
+                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(jLabel7)
+                        .addComponent(hw_grade, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(final_grade, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel9)
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGap(9, 9, 9)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jButton1)
-                            .addComponent(jButton2)
-                            .addComponent(jButton3))))
+                            .addComponent(newBtn)
+                            .addComponent(saveBtn)
+                            .addComponent(deleteBtn))))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 56, Short.MAX_VALUE)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 375, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(22, 22, 22))
@@ -318,29 +336,54 @@ public class GradesMgmt extends javax.swing.JFrame {
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
+    private void grade_idActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_grade_idActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_grade_idActionPerformed
+
+    private void crs_idActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_crs_idActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_crs_idActionPerformed
+
     private void std_idActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_std_idActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_std_idActionPerformed
 
-    private void std_numActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_std_numActionPerformed
+    private void mid_gradeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mid_gradeActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_std_numActionPerformed
+    }//GEN-LAST:event_mid_gradeActionPerformed
 
-    private void std_nameActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_std_nameActionPerformed
+    private void final_gradeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_final_gradeActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_std_nameActionPerformed
+    }//GEN-LAST:event_final_gradeActionPerformed
 
-    private void std_surnameActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_std_surnameActionPerformed
+    private void deleteBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_deleteBtnActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_std_surnameActionPerformed
-
-    private void nationalityActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_nationalityActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_nationalityActionPerformed
-
-    private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jButton3ActionPerformed
+        
+        if(
+           !grade_id.getText().trim().isEmpty()) {
+            int grade_id         = Integer.parseInt(this.grade_id.getText().trim());
+            
+           List grades =StudentGradingSystemProject.grades; 
+           Grades grd;
+           Boolean found=false;
+           Iterator <Grades> itr = grades.iterator();
+           while (itr.hasNext()) {
+              grd = itr.next(); 
+              if(grade_id==grd.getGrd_id()) {
+                found=true;
+                break;
+              }
+            }
+           if (found) {  
+             StudentGradingSystemProject.delete_grade(grade_id);
+             JOptionPane.showMessageDialog(null, "Selected Grade Record Successfully DELETED!");
+           } 
+    } else                                      
+       {
+            JOptionPane.showMessageDialog(null, "You have to fill Grade id field before deleting the record!");
+        }
+        refresh_JTable();
+    }//GEN-LAST:event_deleteBtnActionPerformed
 
     private void jLabel10MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel10MouseClicked
         // TODO add your handling code here:
@@ -353,14 +396,114 @@ public class GradesMgmt extends javax.swing.JFrame {
         this.dispose();
     }//GEN-LAST:event_jLabel2MouseClicked
 
-    private void std_surname1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_std_surname1ActionPerformed
+    private void hw_gradeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_hw_gradeActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_std_surname1ActionPerformed
+    }//GEN-LAST:event_hw_gradeActionPerformed
 
-    private void nationality1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_nationality1ActionPerformed
+    private void letter_gradeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_letter_gradeActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_nationality1ActionPerformed
+    }//GEN-LAST:event_letter_gradeActionPerformed
 
+    private void newBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_newBtnActionPerformed
+        // TODO add your handling code here:
+        grade_id.setText(null);
+        crs_id.setText(null);
+        std_id.setText(null);
+        hw_grade.setText(null);
+        mid_grade.setText(null);
+        final_grade.setText(null);
+        letter_grade.setText(null);
+        
+        grade_id.requestFocus();
+        
+    }//GEN-LAST:event_newBtnActionPerformed
+
+    private void saveBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_saveBtnActionPerformed
+        // TODO add your handling code here:
+        
+        if(
+           !grade_id.getText().trim().isEmpty()&&
+           !std_id.getText().trim().isEmpty()&&
+           !crs_id.getText().trim().isEmpty()&&
+           !mid_grade.getText().trim().isEmpty() && 
+           !hw_grade.getText().trim().isEmpty()&&
+           !final_grade.getText().trim().isEmpty()&&
+           !letter_grade.getText().trim().isEmpty()) {
+            int grade_id         = Integer.parseInt(this.grade_id.getText().trim());
+            int std_id      = Integer.parseInt(this.std_id.getText().trim());
+            int crs_id      = Integer.parseInt(this.crs_id.getText().trim());
+            float hw_grade    = Float.parseFloat(this.hw_grade.getText().trim());
+            float mid_grade = Float.parseFloat(this.mid_grade.getText().trim());
+            float final_grade = Float.parseFloat(this.final_grade.getText().trim());
+            String letter_grade = this.letter_grade.getText().trim();
+            
+            
+           List grades =StudentGradingSystemProject.grades; 
+           Grades grd;
+           Boolean found=false;
+           Iterator <Grades> itr = grades.iterator();
+           while (itr.hasNext()) {
+              grd = itr.next(); 
+              if(grade_id==grd.getGrd_id()) {
+                found=true;
+                break;
+              }
+            }
+           if (!found) {  
+             // New Student Record  
+             StudentGradingSystemProject.add_grade(grade_id, std_id, crs_id, mid_grade, hw_grade, final_grade, letter_grade);
+             JOptionPane.showMessageDialog(null, "NEW Grade Record Successfully ADDED!");
+           } else {
+             // found is true! So existing student recort will be updated!!!  
+             StudentGradingSystemProject.edit_grade(grade_id, std_id, crs_id, mid_grade, hw_grade, final_grade, letter_grade);
+             JOptionPane.showMessageDialog(null, "Grade Record Successfully EDITED!");
+
+           }
+    }                                        
+        else {
+            JOptionPane.showMessageDialog(null, "You have to fill all fields before saving!");
+        }
+        refresh_JTable();
+    }//GEN-LAST:event_saveBtnActionPerformed
+
+    private void gradeTableMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_gradeTableMouseClicked
+        // TODO add your handling code here:
+        int sel_row= gradeTable.getSelectedRow();
+        List grades =StudentGradingSystemProject.grades;
+        Grades grd;
+        grd = (Grades) grades.get(sel_row);
+        grade_id.setText(""+grd.getGrd_id());
+        crs_id.setText(""+grd.getCrs_id());
+        std_id.setText(""+grd.getStd_id());
+        hw_grade.setText(""+grd.getGrd_hw());
+        mid_grade.setText(""+grd.getGrd_mt());
+        final_grade.setText(""+grd.getGrd_final());
+        letter_grade.setText(grd.getGrd_Igrade());
+    }//GEN-LAST:event_gradeTableMouseClicked
+    
+    public void refresh_JTable() {
+        
+           List grades = StudentGradingSystemProject.grades;
+           DefaultTableModel model = (DefaultTableModel) gradeTable.getModel();
+           Object rowData[] = new Object[7]; 
+           Iterator itr = grades.iterator();
+           Grades grd;          
+           model.setNumRows(0); //Remove all existing rows of JTable
+           //Add every element of the List Array as a new row into JTable
+           while (itr.hasNext()) {
+              grd = (Grades) itr.next();
+              rowData[0] = grd.getGrd_id();
+              rowData[1] = grd.getStd_id();
+              rowData[2] = grd.getCrs_id();
+              rowData[3] = grd.getGrd_mt();
+              rowData[4] = grd.getGrd_hw();
+              rowData[5] = grd.getGrd_final();
+              rowData[6] = grd.getGrd_Igrade();
+              
+              model.addRow(rowData);
+           }   
+          }
+    
     /**
      * @param args the command line arguments
      */
@@ -402,9 +545,12 @@ public class GradesMgmt extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.ButtonGroup buttonGroup1;
-    private javax.swing.JButton jButton1;
-    private javax.swing.JButton jButton2;
-    private javax.swing.JButton jButton3;
+    private javax.swing.JTextField crs_id;
+    private javax.swing.JButton deleteBtn;
+    private javax.swing.JTextField final_grade;
+    private javax.swing.JTable gradeTable;
+    private javax.swing.JTextField grade_id;
+    private javax.swing.JTextField hw_grade;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel2;
@@ -417,13 +563,10 @@ public class GradesMgmt extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel9;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JTable jTable1;
-    private javax.swing.JTextField nationality;
-    private javax.swing.JTextField nationality1;
+    private javax.swing.JTextField letter_grade;
+    private javax.swing.JTextField mid_grade;
+    private javax.swing.JButton newBtn;
+    private javax.swing.JButton saveBtn;
     private javax.swing.JTextField std_id;
-    private javax.swing.JTextField std_name;
-    private javax.swing.JTextField std_num;
-    private javax.swing.JTextField std_surname;
-    private javax.swing.JTextField std_surname1;
     // End of variables declaration//GEN-END:variables
 }
