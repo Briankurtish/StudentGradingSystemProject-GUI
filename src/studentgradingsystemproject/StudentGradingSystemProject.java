@@ -15,15 +15,21 @@ import javax.swing.JOptionPane;
 
 
 public class StudentGradingSystemProject {
-    public static List students;
+    public static List students, courses, departments, grades, attendance;
     public static SimpleDateFormat fmt;
     
     public static void main(String[] args) {
         students = new ArrayList();
+        courses = new ArrayList();
+        departments = new ArrayList();
+        grades = new ArrayList();
+        attendance = new ArrayList();
+        
         fmt = new SimpleDateFormat("dd/MM/yyyy");        
         
         //test_students();
         create_students();
+        create_courses();
         
         new Menu().setVisible(true);
         
@@ -197,4 +203,93 @@ public class StudentGradingSystemProject {
         System.out.printf("\n List_student()\n\n");
         list_students();
     }
+    
+    
+    public static void create_courses(){
+        System.out.printf("\n Add Course()\n\n");
+        add_course(1, 1, "ITEC314", "Multi Platform Programming");           
+        add_course(2, 1, "ITEC413", "Information Systems Security");
+        add_course(3, 2, "ECON101", "Introduction to Economics");
+        add_course(4, 3, "BUSS103", "Fundamentals of Business Administration");
+        
+        System.out.printf("\n List Course()\n\n");
+        list_courses();
+    }
+    
+    
+    public static void restore_courses() throws IOException, ClassNotFoundException{
+        File inFile = new File("courses.dat");
+        FileInputStream infileStream = new FileInputStream(inFile);
+        ObjectInputStream inObjectstream = new ObjectInputStream(infileStream);
+        courses = (ArrayList)inObjectstream.readObject();
+        
+        inObjectstream.close();
+    }
+    
+    public static void backup_courses() throws IOException {
+        File outFile = new File("courses.dat");
+        FileOutputStream outfileStream = new FileOutputStream(outFile);
+        ObjectOutputStream outObjectStream = new ObjectOutputStream(outfileStream);
+        
+        outObjectStream.writeObject(courses);
+        outObjectStream.close();
+    }
+    
+    public static void add_course(int id, int dept_id, String crs_code, String crs_name){
+        Course crs = new Course(id, dept_id, crs_code, crs_name);
+        
+        courses.add(crs);
+    }
+    
+    public static void edit_course(int id, int dept_id, String crs_code, String crs_name){
+        
+        Course crs = null;
+        Boolean found = false;
+        Iterator <Course> itr = courses.iterator();
+        
+        while(itr.hasNext()) {
+            crs = itr.next();
+            if(id == crs.getCrs_id()) {
+                found = true;
+                break;
+            }
+        }
+        
+        if(found) {
+            crs.setCrs_code(crs_code);
+            crs.setCrs_id(id);
+            crs.setDept_id(dept_id);
+            crs.setCrs_name(crs_name);
+        }
+    }
+    
+    public static void delete_course(int id){
+        Course crs = null;
+        Boolean found = false;
+        Iterator <Course> itr = courses.iterator();
+        
+        while(itr.hasNext()){
+            crs = itr.next();
+            if(id == crs.getCrs_id()){
+                found = true;
+                break;
+            }
+        }
+        
+        if(found) courses.remove(crs);
+    }
+    
+    public static void list_courses() {
+        Course crs;
+        Iterator <Course> itr = courses.iterator();
+        System.out.printf("\n%2s %10s %15s %20s", "Id", "Dept_ID", "Crs_Code", "Crs_Name");
+        draw_line(79);
+        
+        while(itr.hasNext()){
+            crs = itr.next();
+            System.out.printf("\n%2s %10s %14s %35s", crs.getCrs_id(), crs.getDept_id(), crs.getCrs_code(), crs.getCrs_name());
+        }
+        draw_line(79);
+    }
+    
 } // end of class StudentGradingSystemProject

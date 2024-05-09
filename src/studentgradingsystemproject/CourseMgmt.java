@@ -4,6 +4,13 @@
  */
 package studentgradingsystemproject;
 
+import java.util.Date;
+import java.util.GregorianCalendar;
+import java.util.Iterator;
+import java.util.List;
+import javax.swing.JOptionPane;
+import javax.swing.table.DefaultTableModel;
+
 /**
  *
  * @author Cipher
@@ -15,6 +22,7 @@ public class CourseMgmt extends javax.swing.JFrame {
      */
     public CourseMgmt() {
         initComponents();
+        refresh_JTable();
     }
 
     /**
@@ -127,6 +135,11 @@ public class CourseMgmt extends javax.swing.JFrame {
         saveBtn.setForeground(new java.awt.Color(255, 255, 255));
         saveBtn.setIcon(new javax.swing.ImageIcon("C:\\Users\\Cipher\\Downloads\\191919650316276581303769-24.png")); // NOI18N
         saveBtn.setText("Save");
+        saveBtn.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                saveBtnActionPerformed(evt);
+            }
+        });
 
         deleteBtn.setBackground(new java.awt.Color(102, 102, 102));
         deleteBtn.setFont(new java.awt.Font("Segoe Print", 1, 12)); // NOI18N
@@ -156,6 +169,11 @@ public class CourseMgmt extends javax.swing.JFrame {
         courseTable.setDoubleBuffered(true);
         courseTable.setGridColor(new java.awt.Color(102, 102, 102));
         courseTable.setSelectionBackground(new java.awt.Color(153, 153, 153));
+        courseTable.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                courseTableMouseClicked(evt);
+            }
+        });
         jScrollPane1.setViewportView(courseTable);
 
         jLabel10.setIcon(new javax.swing.ImageIcon("C:\\Users\\Cipher\\Downloads\\18786029401541068758-32.png")); // NOI18N
@@ -277,6 +295,30 @@ public class CourseMgmt extends javax.swing.JFrame {
 
     private void deleteBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_deleteBtnActionPerformed
         // TODO add your handling code here:
+        if(
+           !crs_id.getText().trim().isEmpty()) {
+            int crs_id         = Integer.parseInt(this.crs_id.getText().trim());
+            
+           List courses =StudentGradingSystemProject.courses; 
+           Course crs;
+           Boolean found=false;
+           Iterator <Course> itr = courses.iterator();
+           while (itr.hasNext()) {
+              crs = itr.next(); 
+              if(crs_id==crs.getCrs_id()) {
+                found=true;
+                break;
+              }
+            }
+           if (found) {  
+             StudentGradingSystemProject.delete_course(crs_id);
+             JOptionPane.showMessageDialog(null, "Selected Course Record Successfully DELETED!");
+           } 
+    } else                                      
+       {
+            JOptionPane.showMessageDialog(null, "You have to fill Course id field before deleting the record!");
+        }
+        refresh_JTable();
     }//GEN-LAST:event_deleteBtnActionPerformed
 
     private void jLabel10MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel10MouseClicked
@@ -299,6 +341,79 @@ public class CourseMgmt extends javax.swing.JFrame {
         crs_id.requestFocus();
     }//GEN-LAST:event_newBtnActionPerformed
 
+    private void saveBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_saveBtnActionPerformed
+        // TODO add your handling code here:
+        if(
+           !crs_id.getText().trim().isEmpty()&&
+           !crs_code.getText().trim().isEmpty()&&
+           !crs_name.getText().trim().isEmpty()&&
+           !dept_id.getText().trim().isEmpty()) {
+            int crs_id         = Integer.parseInt(this.crs_id.getText().trim());
+            int dept_id      = Integer.parseInt(this.dept_id.getText().trim());
+            String crs_code    = this.crs_code.getText().trim();
+            String crs_name = this.crs_name.getText().trim();
+            
+            
+           List courses =StudentGradingSystemProject.courses; 
+           Course crs;
+           Boolean found=false;
+           Iterator <Course> itr = courses.iterator();
+           while (itr.hasNext()) {
+              crs = itr.next(); 
+              if(crs_id==crs.getCrs_id()) {
+                found=true;
+                break;
+              }
+            }
+           if (!found) {  
+             // New Student Record  
+             StudentGradingSystemProject.add_course(crs_id, dept_id, crs_code, crs_name);
+             JOptionPane.showMessageDialog(null, "NEW Course Record Successfully ADDED!");
+           } else {
+             // found is true! So existing student recort will be updated!!!  
+             StudentGradingSystemProject.edit_course(crs_id, dept_id, crs_code, crs_name);
+             JOptionPane.showMessageDialog(null, "Course Record Successfully EDITED!");
+
+           }
+    }//GEN-LAST:event_jButton2ActionPerformed
+        else {
+            JOptionPane.showMessageDialog(null, "You have to fill all fields before saving!");
+        }
+        refresh_JTable();
+    }//GEN-LAST:event_saveBtnActionPerformed
+
+    private void courseTableMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_courseTableMouseClicked
+        // TODO add your handling code here:
+        int sel_row= courseTable.getSelectedRow();
+        List courses =StudentGradingSystemProject.courses;
+        Course crs;
+        crs = (Course) courses.get(sel_row);
+        crs_id.setText(""+crs.getCrs_id());
+        dept_id.setText(""+crs.getDept_id());
+        crs_code.setText(crs.getCrs_code());
+        crs_name.setText(crs.getCrs_name());
+    }//GEN-LAST:event_courseTableMouseClicked
+    
+    public void refresh_JTable() {
+        
+           List courses = StudentGradingSystemProject.courses;
+           DefaultTableModel model = (DefaultTableModel) courseTable.getModel();
+           Object rowData[] = new Object[4]; 
+           Iterator itr = courses.iterator();
+           Course crs;          
+           model.setNumRows(0); //Remove all existing rows of JTable
+           //Add every element of the List Array as a new row into JTable
+           while (itr.hasNext()) {
+              crs = (Course) itr.next();
+              rowData[0] = crs.getCrs_id();
+              rowData[1] = crs.getDept_id();
+              rowData[2] = crs.getCrs_code();
+              rowData[3] = crs.getCrs_name();
+              
+              model.addRow(rowData);
+           }   
+          }
+    
     /**
      * @param args the command line arguments
      */
