@@ -32,9 +32,8 @@ public class StudentGradingSystemProject {
     
     public static void add_student(int std_id, String std_no, String std_name, 
                        String std_surname, char std_gender, 
-                       String std_nationality, GregorianCalendar std_birthday) {
-            Student st =new Student(std_id, std_no, std_name, std_surname,
-                                    std_gender, std_nationality, std_birthday);
+                       String std_nationality, GregorianCalendar birthday) {
+            Student st =new Student(std_id, std_no, std_name, std_surname, std_gender, std_nationality, birthday);
             students.add(st);
     }
     
@@ -56,9 +55,9 @@ public class StudentGradingSystemProject {
           st.setStd_no(std_no);
           st.setStd_name(std_name);
           st.setStd_surname(std_surname);
-          st.setStd_nationality(std_nationality);
-          st.setStd_gender(std_gender);
-          st.setStd_birthdate(std_birthday);
+          st.setNationality(std_nationality);
+          st.setGender(std_gender);
+          st.setBirthday(std_birthday);
       }
     }
     
@@ -95,11 +94,11 @@ public class StudentGradingSystemProject {
         
       while (itr.hasNext()) {
           st = itr.next(); 
-          fmt.setCalendar(st.getStd_birthdate());
+//          fmt.setCalendar(st.getBirthday());
           System.out.printf("\n%10d %10s %15s %15s %10s %12s %12s",
               st.getStd_id(), st.getStd_no(), st.getStd_name(), 
-              st.getStd_surname(), st.getStd_gender(), st.getStd_nationality(), 
-              fmt.format(st.getStd_birthdate().getTime()));
+              st.getStd_surname(), st.getGender(), st.getNationality(), 
+              fmt.format(st.getBirthday().getTime()));
       }
       draw_line(90);
         

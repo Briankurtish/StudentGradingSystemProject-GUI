@@ -1,2 +1,0 @@
-# StudentGradingSystemProject GUI
- StudentGradingSystemProject GUI
