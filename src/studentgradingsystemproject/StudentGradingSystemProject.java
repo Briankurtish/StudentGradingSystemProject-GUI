@@ -30,6 +30,7 @@ public class StudentGradingSystemProject {
         //test_students();
         create_students();
         create_courses();
+        create_department();
         
         new Menu().setVisible(true);
         
@@ -143,47 +144,6 @@ public class StudentGradingSystemProject {
         return bdate;       
     }
     
-    public static void test_students() {
-        
-        try {
-        System.out.printf("\n Tests for Class Student\n\n");
-        System.out.printf("\n Add_student()\n\n");
-        
-        add_student(1,"189222", "Ayse","Cengiz",'F',"Turkey",
-                    strToGregorianCalendar("28/03/2002"));
-        add_student(2,"193342","Philip","Udoye",'M',"Nigeri",
-                    strToGregorianCalendar("16/09/2003"));
-        add_student(3,"189931","Kemal","Salih",'M',"TRNC",
-                    strToGregorianCalendar("17/05/2002"));
-        add_student(4,"188883","Fathima","Mohammad",'F',"Syria",
-                    strToGregorianCalendar("22/11/2001"));                
-        add_student(5,"189447","Jasmin","Faruq",'F',"Egypt",
-                    strToGregorianCalendar("19/02/2002"));                
-
-        System.out.printf("\n List_student()\n\n");
-        list_students();
-        
-        System.out.printf("\n Edit_student()\n\n");
-        edit_student(3,"189931","Kemal","Salih",'M',"Turkey",
-                    strToGregorianCalendar("17/04/2002"));
-        System.out.printf("\n List_student()\n\n");
-        list_students();
-
-        backup_student();
-        
-        System.out.printf("\n Delete_student()\n\n");
-        delete_student(3);
-        System.out.printf("\n List_student()\n\n");
-        list_students();
-        
-        retrieve_student();
-        System.out.printf("\n List_student()\n\n");
-        list_students();
-        }
-        catch (IOException | ClassNotFoundException e) {
-            JOptionPane.showMessageDialog(null, "Error");
-                }
-    }
     
     public static void create_students() {
         
@@ -214,6 +174,47 @@ public class StudentGradingSystemProject {
         
         System.out.printf("\n List Course()\n\n");
         list_courses();
+    }
+    
+    public static void create_department(){
+        System.out.printf("\n Add Department()\n\n");
+        add_department(1, "Information Technology");           
+        add_department(2,"Economics");
+        add_department(3, "Business");
+
+
+        System.out.printf("\n List All Departments()\n\n");
+        list_all_departments();
+    }
+    
+    public static void create_grades(){
+        System.out.printf("\n Add Grade()\n\n");
+        add_grade(1,1,1,90f,88f,96f,"A");           
+        add_grade(2,2,1,80f,85f,82f,"B+"); 
+        add_grade(3,3,2,75f,80f,77f,"B-"); 
+        add_grade(4,4,2,69f,75f,66f,"C+"); 
+        add_grade(5,5,1,88f,80f,82f,"A-"); 
+
+
+        System.out.printf("\n List All Grades()\n\n");
+        list_all_grades();
+    }
+    
+    
+    public static void create_attendance(){
+        System.out.printf("\n Add Attendance()\n\n");
+        add_attendance(1,1,1, "09/04/2021");           
+        add_attendance(2,2,1, "09/04/2021"); 
+        add_attendance(3,3,2, "09/04/2021");           
+        add_attendance(4,4,1, "09/04/2021"); 
+        add_attendance(5,5,1, "09/04/2021");           
+        add_attendance(6,1,1, "12/04/2021"); 
+        add_attendance(7,2,1, "12/04/2021");           
+        add_attendance(5,5,1, "12/04/2021"); 
+
+
+        System.out.printf("\n List All Attendances()\n\n");
+        list_all_attendances();
     }
     
     
@@ -288,6 +289,249 @@ public class StudentGradingSystemProject {
         while(itr.hasNext()){
             crs = itr.next();
             System.out.printf("\n%2s %10s %14s %35s", crs.getCrs_id(), crs.getDept_id(), crs.getCrs_code(), crs.getCrs_name());
+        }
+        draw_line(79);
+    }
+    
+    
+    
+    
+    public static void restore_departments() throws IOException, ClassNotFoundException{
+        File inFile = new File("departments.dat");
+        FileInputStream infileStream = new FileInputStream(inFile);
+        ObjectInputStream inObjectstream = new ObjectInputStream(infileStream);
+        departments = (ArrayList)inObjectstream.readObject();
+        
+        inObjectstream.close();
+    }
+    
+    public static void backup_departments() throws IOException {
+        File outFile = new File("departments.dat");
+        FileOutputStream outfileStream = new FileOutputStream(outFile);
+        ObjectOutputStream outObjectStream = new ObjectOutputStream(outfileStream);
+        
+        outObjectStream.writeObject(departments);
+        outObjectStream.close();
+    }
+    
+    
+    public static void add_department(int id, String dept_name){
+        Department dept = new Department(id, dept_name);
+        
+        departments.add(dept);
+    }
+    
+    
+    public static void edit_department(int id, String dept_name){
+        
+        Department dept = null;
+        Boolean found = false;
+        Iterator <Department> itr = departments.iterator();
+        
+        while(itr.hasNext()) {
+            dept = itr.next();
+            if(id == dept.getDept_id()) {
+                found = true;
+                break;
+            }
+        }
+        
+        if(found) {
+            dept.setDept_id(id);
+            dept.setDept_name(dept_name);
+            
+        }
+    }
+    
+    
+    public static void delete_department(int id){
+        Department dept = null;
+        Boolean found = false;
+        Iterator <Department> itr = departments.iterator();
+        
+        while(itr.hasNext()){
+            dept = itr.next();
+            if(id == dept.getDept_id()){
+                found = true;
+                break;
+            }
+        }
+        
+        if(found) departments.remove(dept);
+    }
+    
+    public static void list_all_departments() {
+        Department dept;
+        Iterator <Department> itr = departments.iterator();
+        System.out.printf("\n%2s %10s", "Id", "Dept_Name");
+        draw_line(30);
+        
+        while(itr.hasNext()){
+            dept = itr.next();
+            System.out.printf("\n%2s %10s", dept.getDept_id(), dept.getDept_name());
+        }
+        draw_line(30);
+    }
+    
+    
+    public static void restore_grades() throws IOException, ClassNotFoundException{
+        File inFile = new File("Grades.dat");
+        FileInputStream infileStream = new FileInputStream(inFile);
+        ObjectInputStream inObjectstream = new ObjectInputStream(infileStream);
+        grades = (ArrayList)inObjectstream.readObject();
+        
+        inObjectstream.close();
+    }
+    
+    
+    public static void backup_grades() throws IOException {
+        File outFile = new File("Grades.dat");
+        FileOutputStream outfileStream = new FileOutputStream(outFile);
+        ObjectOutputStream outObjectStream = new ObjectOutputStream(outfileStream);
+        
+        outObjectStream.writeObject(grades);
+        outObjectStream.close();
+    }
+    
+    public static void add_grade(int id, int std_id, int crs_id,  float grd_mt, float grd_hw, float grd_final, String grd_Igrade){
+        Grades grd = new Grades(id, std_id, crs_id, grd_mt, grd_hw, grd_final, grd_Igrade);
+        
+        grades.add(grd);
+    }
+    
+    public static void edit_grade(int id, int std_id, int crs_id,  float grd_mt, float grd_hw, float grd_final, String grd_Igrade){
+        
+        Grades grd = null;
+        Boolean found = false;
+        Iterator <Grades> itr = grades.iterator();
+        
+        while(itr.hasNext()) {
+            grd = itr.next();
+            if(id == grd.getGrd_id()) {
+                found = true;
+                break;
+            }
+        }
+        
+        if(found) {
+            grd.setGrd_id(id);
+            grd.setStd_id(std_id);
+            grd.setCrs_id(crs_id);
+            grd.setGrd_mt(grd_mt);
+            grd.setGrd_hw(grd_hw);
+            grd.setGrd_final(grd_final);
+            grd.setGrd_Igrade(grd_Igrade);
+        }
+    }
+    
+    public static void delete_grade(int id){
+        Grades grd = null;
+        Boolean found = false;
+        Iterator <Grades> itr = grades.iterator();
+        
+        while(itr.hasNext()){
+            grd = itr.next();
+            if(id == grd.getGrd_id()){
+                found = true;
+                break;
+            }
+        }
+        
+        if(found) grades.remove(grd);
+    }
+    
+    
+    public static void list_all_grades() {
+        Grades grd;
+        Iterator <Grades> itr = grades.iterator();
+        System.out.printf("\n%2s %5s %5s %10s %10s %10s %15s ", "Id", "Std_ID", "Crs_ID", "Grd_MT", "Grd_HW", "Grd_FIN", "Grd_IGrade");
+        draw_line(79);
+        
+        while(itr.hasNext()){
+            grd = itr.next();
+            System.out.printf("\n%2s %5s %5s %10s %10s %10s %12s", grd.getGrd_id(), grd.getStd_id(), grd.getCrs_id(), grd.getGrd_mt(), grd.getGrd_hw(), grd.getGrd_final(), grd.getGrd_Igrade());
+        }
+        draw_line(79);
+    }
+    
+    
+    
+    public static void restore_attendances() throws IOException, ClassNotFoundException{
+        File inFile = new File("Attendances.dat");
+        FileInputStream infileStream = new FileInputStream(inFile);
+        ObjectInputStream inObjectstream = new ObjectInputStream(infileStream);
+        attendance = (ArrayList)inObjectstream.readObject();
+        
+        inObjectstream.close();
+    }
+    
+    public static void backup_attendances() throws IOException {
+        File outFile = new File("Attendances.dat");
+        FileOutputStream outfileStream = new FileOutputStream(outFile);
+        ObjectOutputStream outObjectStream = new ObjectOutputStream(outfileStream);
+        
+        outObjectStream.writeObject(attendance);
+        outObjectStream.close();
+    }
+    
+    
+    public static void add_attendance(int id, int std_id, int crs_id, String att_date){
+        Attendance att = new Attendance(id, std_id, crs_id, att_date);
+        
+        attendance.add(att);
+    }
+    
+    
+    public static void edit_attendance(int id, int std_id, int crs_id, String att_date){
+        
+        Attendance att = null;
+        Boolean found = false;
+        Iterator <Attendance> itr = attendance.iterator();
+        
+        while(itr.hasNext()) {
+            att = itr.next();
+            if(id == att.getAtt_id()) {
+                found = true;
+                break;
+            }
+        }
+        
+        if(found) {
+            att.setAtt_id(id);
+            att.setStd_id(std_id);
+            att.setCrs_id(crs_id);
+            att.setAtt_date(att_date);
+        }
+    }
+    
+    
+    public static void delete_attendance(int id){
+        Attendance att = null;
+        Boolean found = false;
+        Iterator <Attendance> itr = attendance.iterator();
+        
+        while(itr.hasNext()){
+            att = itr.next();
+            if(id == att.getAtt_id()){
+                found = true;
+                break;
+            }
+        }
+        
+        if(found) attendance.remove(att);
+    }
+    
+    
+    
+    public static void list_all_attendances() {
+        Attendance att;
+        Iterator <Attendance> itr = attendance.iterator();
+        System.out.printf("\n%2s %5s %5s %10s", "Id", "Std_ID", "Crs_ID", "Att_Date");
+        draw_line(79);
+        
+        while(itr.hasNext()){
+            att = itr.next();
+            System.out.printf("\n%2s %5s %5s %13s", att.getAtt_id(), att.getStd_id(), att.getCrs_id(), att.getAtt_date());
         }
         draw_line(79);
     }
