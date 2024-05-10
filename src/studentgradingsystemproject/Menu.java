@@ -4,6 +4,23 @@
  */
 package studentgradingsystemproject;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.JOptionPane;
+import static studentgradingsystemproject.StudentGradingSystemProject.attendance;
+import static studentgradingsystemproject.StudentGradingSystemProject.courses;
+import static studentgradingsystemproject.StudentGradingSystemProject.departments;
+import static studentgradingsystemproject.StudentGradingSystemProject.grades;
+import static studentgradingsystemproject.StudentGradingSystemProject.students;
+
 /**
  *
  * @author Cipher
@@ -30,15 +47,15 @@ public class Menu extends javax.swing.JFrame {
         jLabel2 = new javax.swing.JLabel();
         jButton1 = new javax.swing.JButton();
         jLabel3 = new javax.swing.JLabel();
-        jButton2 = new javax.swing.JButton();
+        backupBtn = new javax.swing.JButton();
         jLabel4 = new javax.swing.JLabel();
-        jButton3 = new javax.swing.JButton();
+        restoreBtn = new javax.swing.JButton();
         jLabel1 = new javax.swing.JLabel();
         jLabel5 = new javax.swing.JLabel();
         jMenuBar1 = new javax.swing.JMenuBar();
         jMenu1 = new javax.swing.JMenu();
-        jMenuItem1 = new javax.swing.JMenuItem();
-        jMenuItem2 = new javax.swing.JMenuItem();
+        backupMenuItem = new javax.swing.JMenuItem();
+        restoreMenuItem = new javax.swing.JMenuItem();
         jMenuItem3 = new javax.swing.JMenuItem();
         jMenu2 = new javax.swing.JMenu();
         jMenuItem4 = new javax.swing.JMenuItem();
@@ -77,17 +94,27 @@ public class Menu extends javax.swing.JFrame {
 
         jLabel3.setIcon(new javax.swing.ImageIcon("C:\\Users\\Cipher\\Downloads\\349096681637204808-128.png")); // NOI18N
 
-        jButton2.setBackground(new java.awt.Color(102, 102, 102));
-        jButton2.setFont(new java.awt.Font("Segoe Print", 1, 12)); // NOI18N
-        jButton2.setForeground(new java.awt.Color(255, 255, 255));
-        jButton2.setText("Backup");
+        backupBtn.setBackground(new java.awt.Color(102, 102, 102));
+        backupBtn.setFont(new java.awt.Font("Segoe Print", 1, 12)); // NOI18N
+        backupBtn.setForeground(new java.awt.Color(255, 255, 255));
+        backupBtn.setText("Backup");
+        backupBtn.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                backupBtnActionPerformed(evt);
+            }
+        });
 
         jLabel4.setIcon(new javax.swing.ImageIcon("C:\\Users\\Cipher\\Downloads\\17965933361690506199-128.png")); // NOI18N
 
-        jButton3.setBackground(new java.awt.Color(102, 102, 102));
-        jButton3.setFont(new java.awt.Font("Segoe Print", 1, 12)); // NOI18N
-        jButton3.setForeground(new java.awt.Color(255, 255, 255));
-        jButton3.setText("Restore");
+        restoreBtn.setBackground(new java.awt.Color(102, 102, 102));
+        restoreBtn.setFont(new java.awt.Font("Segoe Print", 1, 12)); // NOI18N
+        restoreBtn.setForeground(new java.awt.Color(255, 255, 255));
+        restoreBtn.setText("Restore");
+        restoreBtn.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                restoreBtnActionPerformed(evt);
+            }
+        });
 
         jLabel1.setFont(new java.awt.Font("Segoe Print", 1, 48)); // NOI18N
         jLabel1.setForeground(new java.awt.Color(255, 255, 255));
@@ -109,7 +136,7 @@ public class Menu extends javax.swing.JFrame {
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 128, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(backupBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 128, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(90, 90, 90))
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGap(109, 109, 109)
@@ -119,7 +146,7 @@ public class Menu extends javax.swing.JFrame {
                         .addGap(82, 82, 82)))
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(jLabel4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jButton3, javax.swing.GroupLayout.PREFERRED_SIZE, 128, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(restoreBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 128, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
                 .addContainerGap(234, Short.MAX_VALUE)
@@ -144,8 +171,8 @@ public class Menu extends javax.swing.JFrame {
                         .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 108, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jButton3)
-                            .addComponent(jButton2))
+                            .addComponent(restoreBtn)
+                            .addComponent(backupBtn))
                         .addGap(167, 167, 167)))
                 .addComponent(jLabel5)
                 .addGap(14, 14, 14))
@@ -156,15 +183,35 @@ public class Menu extends javax.swing.JFrame {
         jMenu1.setText("System");
         jMenu1.setFont(new java.awt.Font("Segoe Print", 1, 12)); // NOI18N
 
-        jMenuItem1.setFont(new java.awt.Font("Segoe Print", 0, 12)); // NOI18N
-        jMenuItem1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/studentgradingsystemproject/Iconoir-Team-Iconoir-Database-backup.24.png"))); // NOI18N
-        jMenuItem1.setText("Backup");
-        jMenu1.add(jMenuItem1);
+        backupMenuItem.setFont(new java.awt.Font("Segoe Print", 0, 12)); // NOI18N
+        backupMenuItem.setIcon(new javax.swing.ImageIcon(getClass().getResource("/studentgradingsystemproject/Iconoir-Team-Iconoir-Database-backup.24.png"))); // NOI18N
+        backupMenuItem.setText("Backup");
+        backupMenuItem.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                backupMenuItemMouseClicked(evt);
+            }
+        });
+        backupMenuItem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                backupMenuItemActionPerformed(evt);
+            }
+        });
+        jMenu1.add(backupMenuItem);
 
-        jMenuItem2.setFont(new java.awt.Font("Segoe Print", 0, 12)); // NOI18N
-        jMenuItem2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/studentgradingsystemproject/iconfinder_Upload_132671.png"))); // NOI18N
-        jMenuItem2.setText("Restore");
-        jMenu1.add(jMenuItem2);
+        restoreMenuItem.setFont(new java.awt.Font("Segoe Print", 0, 12)); // NOI18N
+        restoreMenuItem.setIcon(new javax.swing.ImageIcon(getClass().getResource("/studentgradingsystemproject/iconfinder_Upload_132671.png"))); // NOI18N
+        restoreMenuItem.setText("Restore");
+        restoreMenuItem.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                restoreMenuItemMouseClicked(evt);
+            }
+        });
+        restoreMenuItem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                restoreMenuItemActionPerformed(evt);
+            }
+        });
+        jMenu1.add(restoreMenuItem);
 
         jMenuItem3.setIcon(new javax.swing.ImageIcon(getClass().getResource("/studentgradingsystemproject/iconfinder_Exit_132751_1.png"))); // NOI18N
         jMenuItem3.setText("Exit");
@@ -316,6 +363,210 @@ public class Menu extends javax.swing.JFrame {
         new AttendanceMgmt().setVisible(true);
     }//GEN-LAST:event_jMenuItem8ActionPerformed
 
+    private void backupMenuItemMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_backupMenuItemMouseClicked
+        try {
+            // TODO add your handling code here:
+
+            backup_student();
+            backup_courses();
+            backup_grades();
+            backup_departments();
+            backup_attendances();
+            
+            JOptionPane.showMessageDialog(null, "BackUp of Records Successfull");
+        } catch (IOException ex) {
+            Logger.getLogger(Menu.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+    }//GEN-LAST:event_backupMenuItemMouseClicked
+
+    private void restoreMenuItemMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_restoreMenuItemMouseClicked
+        // TODO add your handling code here:
+        
+        try {
+            // TODO add your handling code here:
+
+            retrieve_student();
+            restore_courses();
+            restore_departments();
+            restore_grades();
+            restore_attendances();
+            
+            JOptionPane.showMessageDialog(null, "All Records have been Restored Successfully");
+        } catch (IOException ex) {
+            Logger.getLogger(Menu.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(Menu.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }//GEN-LAST:event_restoreMenuItemMouseClicked
+
+    private void backupBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_backupBtnActionPerformed
+        // TODO add your handling code here:
+        try {
+            // TODO add your handling code here:
+
+            backup_student();
+            backup_courses();
+            backup_grades();
+            backup_departments();
+            backup_attendances();
+            
+            JOptionPane.showMessageDialog(null, "BackUp of Records Successfull");
+        } catch (IOException ex) {
+            Logger.getLogger(Menu.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }//GEN-LAST:event_backupBtnActionPerformed
+
+    private void restoreBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_restoreBtnActionPerformed
+        // TODO add your handling code here:
+        try {
+            // TODO add your handling code here:
+
+            retrieve_student();
+            restore_courses();
+            restore_departments();
+            restore_grades();
+            restore_attendances();
+            
+            JOptionPane.showMessageDialog(null, "All Records have been Restored Successfully");
+        } catch (IOException ex) {
+            Logger.getLogger(Menu.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(Menu.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }//GEN-LAST:event_restoreBtnActionPerformed
+
+    private void backupMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_backupMenuItemActionPerformed
+        // TODO add your handling code here:
+         try {
+            // TODO add your handling code here:
+
+            backup_student();
+            backup_courses();
+            backup_grades();
+            backup_departments();
+            backup_attendances();
+            
+            JOptionPane.showMessageDialog(null, "BackUp of Records Successfull");
+        } catch (IOException ex) {
+            Logger.getLogger(Menu.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }//GEN-LAST:event_backupMenuItemActionPerformed
+
+    private void restoreMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_restoreMenuItemActionPerformed
+        // TODO add your handling code here:
+        try {
+            // TODO add your handling code here:
+
+            retrieve_student();
+            restore_courses();
+            restore_departments();
+            restore_grades();
+            restore_attendances();
+            
+            JOptionPane.showMessageDialog(null, "All Records have been Restored Successfully");
+        } catch (IOException ex) {
+            Logger.getLogger(Menu.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(Menu.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }//GEN-LAST:event_restoreMenuItemActionPerformed
+    
+        public static void backup_student() throws IOException
+    {
+     File outfile  = new File("students.dat");
+     FileOutputStream outfilestream = new FileOutputStream(outfile);
+     ObjectOutputStream outObjectStream = new ObjectOutputStream(outfilestream);
+     
+     outObjectStream.writeObject(students);
+     outObjectStream.close();
+     
+    }
+    
+    public static void retrieve_student() throws IOException, ClassNotFoundException
+    {
+     File infile  = new File("students.dat");
+     FileInputStream infilestream = new FileInputStream(infile);
+     ObjectInputStream inObjectStream = new ObjectInputStream(infilestream);
+     students = (ArrayList)inObjectStream.readObject();
+     
+     inObjectStream.close();
+     
+    }
+    
+    public static void restore_courses() throws IOException, ClassNotFoundException{
+        File inFile = new File("courses.dat");
+        FileInputStream infileStream = new FileInputStream(inFile);
+        ObjectInputStream inObjectstream = new ObjectInputStream(infileStream);
+        courses = (ArrayList)inObjectstream.readObject();
+        
+        inObjectstream.close();
+    }
+    
+    public static void backup_courses() throws IOException {
+        File outFile = new File("courses.dat");
+        FileOutputStream outfileStream = new FileOutputStream(outFile);
+        ObjectOutputStream outObjectStream = new ObjectOutputStream(outfileStream);
+        
+        outObjectStream.writeObject(courses);
+        outObjectStream.close();
+    }
+    
+    public static void restore_departments() throws IOException, ClassNotFoundException{
+        File inFile = new File("departments.dat");
+        FileInputStream infileStream = new FileInputStream(inFile);
+        ObjectInputStream inObjectstream = new ObjectInputStream(infileStream);
+        departments = (ArrayList)inObjectstream.readObject();
+        
+        inObjectstream.close();
+    }
+    
+    public static void backup_departments() throws IOException {
+        File outFile = new File("departments.dat");
+        FileOutputStream outfileStream = new FileOutputStream(outFile);
+        ObjectOutputStream outObjectStream = new ObjectOutputStream(outfileStream);
+        
+        outObjectStream.writeObject(departments);
+        outObjectStream.close();
+    }
+    
+    
+    public static void restore_grades() throws IOException, ClassNotFoundException{
+        File inFile = new File("Grades.dat");
+        FileInputStream infileStream = new FileInputStream(inFile);
+        ObjectInputStream inObjectstream = new ObjectInputStream(infileStream);
+        grades = (ArrayList)inObjectstream.readObject();
+        
+        inObjectstream.close();
+    }
+    
+    
+    public static void backup_grades() throws IOException {
+        File outFile = new File("Grades.dat");
+        FileOutputStream outfileStream = new FileOutputStream(outFile);
+        ObjectOutputStream outObjectStream = new ObjectOutputStream(outfileStream);
+        
+        outObjectStream.writeObject(grades);
+        outObjectStream.close();
+    }
+    
+    public static void restore_attendances() throws IOException, ClassNotFoundException{
+        File inFile = new File("Attendances.dat");
+        FileInputStream infileStream = new FileInputStream(inFile);
+        ObjectInputStream inObjectstream = new ObjectInputStream(infileStream);
+        attendance = (ArrayList)inObjectstream.readObject();
+        
+        inObjectstream.close();
+    }
+    
+    public static void backup_attendances() throws IOException {
+        File outFile = new File("Attendances.dat");
+        FileOutputStream outfileStream = new FileOutputStream(outFile);
+        ObjectOutputStream outObjectStream = new ObjectOutputStream(outfileStream);
+        
+        outObjectStream.writeObject(attendance);
+        outObjectStream.close();
+    }
     /**
      * @param args the command line arguments
      */
@@ -353,9 +604,9 @@ public class Menu extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton backupBtn;
+    private javax.swing.JMenuItem backupMenuItem;
     private javax.swing.JButton jButton1;
-    private javax.swing.JButton jButton2;
-    private javax.swing.JButton jButton3;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
@@ -368,8 +619,6 @@ public class Menu extends javax.swing.JFrame {
     private javax.swing.JMenu jMenu6;
     private javax.swing.JMenu jMenu7;
     private javax.swing.JMenuBar jMenuBar1;
-    private javax.swing.JMenuItem jMenuItem1;
-    private javax.swing.JMenuItem jMenuItem2;
     private javax.swing.JMenuItem jMenuItem3;
     private javax.swing.JMenuItem jMenuItem4;
     private javax.swing.JMenuItem jMenuItem5;
@@ -377,5 +626,7 @@ public class Menu extends javax.swing.JFrame {
     private javax.swing.JMenuItem jMenuItem7;
     private javax.swing.JMenuItem jMenuItem8;
     private javax.swing.JPanel jPanel1;
+    private javax.swing.JButton restoreBtn;
+    private javax.swing.JMenuItem restoreMenuItem;
     // End of variables declaration//GEN-END:variables
 }

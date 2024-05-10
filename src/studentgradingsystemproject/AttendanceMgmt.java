@@ -4,6 +4,23 @@
  */
 package studentgradingsystemproject;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.util.ArrayList;
+import java.util.GregorianCalendar;
+import java.util.Iterator;
+import java.util.List;
+import javax.swing.JOptionPane;
+import javax.swing.table.DefaultTableModel;
+import static studentgradingsystemproject.StudentGradingSystemProject.courses;
+import static studentgradingsystemproject.StudentGradingSystemProject.departments;
+import static studentgradingsystemproject.StudentGradingSystemProject.grades;
+import static studentgradingsystemproject.StudentGradingSystemProject.students;
+
 /**
  *
  * @author Cipher
@@ -15,6 +32,7 @@ public class AttendanceMgmt extends javax.swing.JFrame {
      */
     public AttendanceMgmt() {
         initComponents();
+        refresh_JTable();
     }
 
     /**
@@ -31,19 +49,19 @@ public class AttendanceMgmt extends javax.swing.JFrame {
         jLabel1 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
-        std_id = new javax.swing.JTextField();
+        att_id = new javax.swing.JTextField();
         jLabel4 = new javax.swing.JLabel();
-        std_num = new javax.swing.JTextField();
-        std_name = new javax.swing.JTextField();
+        std_id = new javax.swing.JTextField();
+        crs_id = new javax.swing.JTextField();
         jLabel5 = new javax.swing.JLabel();
         jLabel6 = new javax.swing.JLabel();
-        jButton1 = new javax.swing.JButton();
-        jButton2 = new javax.swing.JButton();
-        jButton3 = new javax.swing.JButton();
+        newBtn = new javax.swing.JButton();
+        saveBtn = new javax.swing.JButton();
+        deleteBtn = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
-        jTable1 = new javax.swing.JTable();
+        att_table = new javax.swing.JTable();
         jLabel10 = new javax.swing.JLabel();
-        datePicker1 = new com.github.lgooddatepicker.components.DatePicker();
+        att_date = new com.github.lgooddatepicker.components.DatePicker();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
@@ -52,9 +70,9 @@ public class AttendanceMgmt extends javax.swing.JFrame {
         jPanel1.setBackground(new java.awt.Color(102, 102, 102));
         jPanel1.setForeground(new java.awt.Color(255, 255, 255));
 
+        jLabel1.setText("ATTENDANCE MANAGEMENT");
         jLabel1.setFont(new java.awt.Font("Segoe Print", 1, 24)); // NOI18N
         jLabel1.setForeground(new java.awt.Color(255, 255, 255));
-        jLabel1.setText("ATTENDANCE MANAGEMENT");
 
         jLabel2.setIcon(new javax.swing.ImageIcon("C:\\Users\\Cipher\\Downloads\\17306852241586787822-128(1).png")); // NOI18N
         jLabel2.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -63,9 +81,21 @@ public class AttendanceMgmt extends javax.swing.JFrame {
             }
         });
 
+        jLabel3.setText("Attendance ID");
         jLabel3.setFont(new java.awt.Font("Segoe Print", 0, 12)); // NOI18N
         jLabel3.setForeground(new java.awt.Color(255, 255, 255));
-        jLabel3.setText("Attendance ID");
+
+        att_id.setBackground(new java.awt.Color(102, 102, 102));
+        att_id.setForeground(new java.awt.Color(255, 255, 255));
+        att_id.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                att_idActionPerformed(evt);
+            }
+        });
+
+        jLabel4.setText("Student ID");
+        jLabel4.setFont(new java.awt.Font("Segoe Print", 0, 12)); // NOI18N
+        jLabel4.setForeground(new java.awt.Color(255, 255, 255));
 
         std_id.setBackground(new java.awt.Color(102, 102, 102));
         std_id.setForeground(new java.awt.Color(255, 255, 255));
@@ -75,61 +105,56 @@ public class AttendanceMgmt extends javax.swing.JFrame {
             }
         });
 
-        jLabel4.setFont(new java.awt.Font("Segoe Print", 0, 12)); // NOI18N
-        jLabel4.setForeground(new java.awt.Color(255, 255, 255));
-        jLabel4.setText("Student ID");
-
-        std_num.setBackground(new java.awt.Color(102, 102, 102));
-        std_num.setForeground(new java.awt.Color(255, 255, 255));
-        std_num.addActionListener(new java.awt.event.ActionListener() {
+        crs_id.setBackground(new java.awt.Color(102, 102, 102));
+        crs_id.setForeground(new java.awt.Color(255, 255, 255));
+        crs_id.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                std_numActionPerformed(evt);
+                crs_idActionPerformed(evt);
             }
         });
 
-        std_name.setBackground(new java.awt.Color(102, 102, 102));
-        std_name.setForeground(new java.awt.Color(255, 255, 255));
-        std_name.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                std_nameActionPerformed(evt);
-            }
-        });
-
+        jLabel5.setText("Course ID");
         jLabel5.setFont(new java.awt.Font("Segoe Print", 0, 12)); // NOI18N
         jLabel5.setForeground(new java.awt.Color(255, 255, 255));
-        jLabel5.setText("Course ID");
 
+        jLabel6.setText("Attendance Date");
         jLabel6.setFont(new java.awt.Font("Segoe Print", 0, 12)); // NOI18N
         jLabel6.setForeground(new java.awt.Color(255, 255, 255));
-        jLabel6.setText("Attendance Date");
 
-        jButton1.setBackground(new java.awt.Color(102, 102, 102));
-        jButton1.setFont(new java.awt.Font("Segoe Print", 1, 12)); // NOI18N
-        jButton1.setForeground(new java.awt.Color(255, 255, 255));
-        jButton1.setIcon(new javax.swing.ImageIcon("C:\\Users\\Cipher\\Downloads\\3443228331679654522-24.png")); // NOI18N
-        jButton1.setText("New");
-
-        jButton2.setBackground(new java.awt.Color(102, 102, 102));
-        jButton2.setFont(new java.awt.Font("Segoe Print", 1, 12)); // NOI18N
-        jButton2.setForeground(new java.awt.Color(255, 255, 255));
-        jButton2.setIcon(new javax.swing.ImageIcon("C:\\Users\\Cipher\\Downloads\\191919650316276581303769-24.png")); // NOI18N
-        jButton2.setText("Save");
-
-        jButton3.setBackground(new java.awt.Color(102, 102, 102));
-        jButton3.setFont(new java.awt.Font("Segoe Print", 1, 12)); // NOI18N
-        jButton3.setForeground(new java.awt.Color(255, 255, 255));
-        jButton3.setIcon(new javax.swing.ImageIcon("C:\\Users\\Cipher\\Downloads\\14974663671582988848-24.png")); // NOI18N
-        jButton3.setText("Delete");
-        jButton3.addActionListener(new java.awt.event.ActionListener() {
+        newBtn.setIcon(new javax.swing.ImageIcon("C:\\Users\\Cipher\\Downloads\\3443228331679654522-24.png")); // NOI18N
+        newBtn.setText("New");
+        newBtn.setBackground(new java.awt.Color(102, 102, 102));
+        newBtn.setFont(new java.awt.Font("Segoe Print", 1, 12)); // NOI18N
+        newBtn.setForeground(new java.awt.Color(255, 255, 255));
+        newBtn.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton3ActionPerformed(evt);
+                newBtnActionPerformed(evt);
             }
         });
 
-        jTable1.setBackground(new java.awt.Color(102, 102, 102));
-        jTable1.setFont(new java.awt.Font("Segoe Print", 0, 12)); // NOI18N
-        jTable1.setForeground(new java.awt.Color(255, 255, 255));
-        jTable1.setModel(new javax.swing.table.DefaultTableModel(
+        saveBtn.setIcon(new javax.swing.ImageIcon("C:\\Users\\Cipher\\Downloads\\191919650316276581303769-24.png")); // NOI18N
+        saveBtn.setText("Save");
+        saveBtn.setBackground(new java.awt.Color(102, 102, 102));
+        saveBtn.setFont(new java.awt.Font("Segoe Print", 1, 12)); // NOI18N
+        saveBtn.setForeground(new java.awt.Color(255, 255, 255));
+        saveBtn.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                saveBtnActionPerformed(evt);
+            }
+        });
+
+        deleteBtn.setIcon(new javax.swing.ImageIcon("C:\\Users\\Cipher\\Downloads\\14974663671582988848-24.png")); // NOI18N
+        deleteBtn.setText("Delete");
+        deleteBtn.setBackground(new java.awt.Color(102, 102, 102));
+        deleteBtn.setFont(new java.awt.Font("Segoe Print", 1, 12)); // NOI18N
+        deleteBtn.setForeground(new java.awt.Color(255, 255, 255));
+        deleteBtn.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                deleteBtnActionPerformed(evt);
+            }
+        });
+
+        att_table.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {null, null, null, null},
                 {null, null, null, null},
@@ -140,10 +165,18 @@ public class AttendanceMgmt extends javax.swing.JFrame {
                 "Attendance ID", "Student ID", " Course ID", "Attendance Date"
             }
         ));
-        jTable1.setDoubleBuffered(true);
-        jTable1.setGridColor(new java.awt.Color(102, 102, 102));
-        jTable1.setSelectionBackground(new java.awt.Color(153, 153, 153));
-        jScrollPane1.setViewportView(jTable1);
+        att_table.setBackground(new java.awt.Color(102, 102, 102));
+        att_table.setDoubleBuffered(true);
+        att_table.setFont(new java.awt.Font("Segoe Print", 0, 12)); // NOI18N
+        att_table.setForeground(new java.awt.Color(255, 255, 255));
+        att_table.setGridColor(new java.awt.Color(102, 102, 102));
+        att_table.setSelectionBackground(new java.awt.Color(153, 153, 153));
+        att_table.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                att_tableMouseClicked(evt);
+            }
+        });
+        jScrollPane1.setViewportView(att_table);
 
         jLabel10.setIcon(new javax.swing.ImageIcon("C:\\Users\\Cipher\\Downloads\\18786029401541068758-32.png")); // NOI18N
         jLabel10.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -152,7 +185,7 @@ public class AttendanceMgmt extends javax.swing.JFrame {
             }
         });
 
-        datePicker1.setBackground(new java.awt.Color(102, 102, 102));
+        att_date.setBackground(new java.awt.Color(102, 102, 102));
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -175,26 +208,26 @@ public class AttendanceMgmt extends javax.swing.JFrame {
                             .addComponent(jLabel3))
                         .addGap(18, 18, 18)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(std_id, javax.swing.GroupLayout.DEFAULT_SIZE, 234, Short.MAX_VALUE)
-                            .addComponent(std_num))
+                            .addComponent(att_id, javax.swing.GroupLayout.DEFAULT_SIZE, 234, Short.MAX_VALUE)
+                            .addComponent(std_id))
                         .addGap(128, 128, 128)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jLabel5)
                             .addComponent(jLabel6))
                         .addGap(29, 29, 29)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(std_name, javax.swing.GroupLayout.DEFAULT_SIZE, 235, Short.MAX_VALUE)
-                            .addComponent(datePicker1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                            .addComponent(crs_id, javax.swing.GroupLayout.DEFAULT_SIZE, 235, Short.MAX_VALUE)
+                            .addComponent(att_date, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGap(49, 49, 49)
                         .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 1079, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGap(382, 382, 382)
-                        .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 111, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(newBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 111, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(32, 32, 32)
-                        .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(saveBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(32, 32, 32)
-                        .addComponent(jButton3, javax.swing.GroupLayout.PREFERRED_SIZE, 111, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addComponent(deleteBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 111, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap(52, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
@@ -208,26 +241,26 @@ public class AttendanceMgmt extends javax.swing.JFrame {
                 .addGap(56, 56, 56)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(std_id, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(att_id, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(18, 18, 18)
-                        .addComponent(std_num, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(std_id, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jLabel5)
-                            .addComponent(std_name, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(crs_id, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGap(18, 18, 18)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jLabel6)
-                            .addComponent(datePicker1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                            .addComponent(att_date, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addComponent(jLabel3)
                         .addGap(18, 18, 18)
                         .addComponent(jLabel4)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 56, Short.MAX_VALUE)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jButton1)
-                    .addComponent(jButton2)
-                    .addComponent(jButton3))
+                    .addComponent(newBtn)
+                    .addComponent(saveBtn)
+                    .addComponent(deleteBtn))
                 .addGap(29, 29, 29)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 375, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(22, 22, 22))
@@ -248,21 +281,46 @@ public class AttendanceMgmt extends javax.swing.JFrame {
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
+    private void att_idActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_att_idActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_att_idActionPerformed
+
     private void std_idActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_std_idActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_std_idActionPerformed
 
-    private void std_numActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_std_numActionPerformed
+    private void crs_idActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_crs_idActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_std_numActionPerformed
+    }//GEN-LAST:event_crs_idActionPerformed
 
-    private void std_nameActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_std_nameActionPerformed
+    private void deleteBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_deleteBtnActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_std_nameActionPerformed
-
-    private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jButton3ActionPerformed
+        
+        if(
+           !att_id.getText().trim().isEmpty()) {
+            int att_id         = Integer.parseInt(this.att_id.getText().trim());
+            
+           List attendance =StudentGradingSystemProject.attendance; 
+           Attendance att;
+           Boolean found=false;
+           Iterator <Attendance> itr = attendance.iterator();
+           while (itr.hasNext()) {
+              att = itr.next(); 
+              if(att_id==att.getAtt_id()) {
+                found=true;
+                break;
+              }
+            }
+           if (found) {  
+             StudentGradingSystemProject.delete_attendance(att_id);
+             JOptionPane.showMessageDialog(null, "Selected Attendance Record Successfully DELETED!");
+           } 
+    } else                                      
+       {
+            JOptionPane.showMessageDialog(null, "You have to fill Attendance id field before deleting the record!");
+        }
+        refresh_JTable();
+    }//GEN-LAST:event_deleteBtnActionPerformed
 
     private void jLabel10MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel10MouseClicked
         // TODO add your handling code here:
@@ -275,6 +333,100 @@ public class AttendanceMgmt extends javax.swing.JFrame {
         this.dispose();
     }//GEN-LAST:event_jLabel2MouseClicked
 
+    private void newBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_newBtnActionPerformed
+        // TODO add your handling code here:
+        
+        att_id.setText(null);
+        std_id.setText(null);
+        crs_id.setText(null);
+        att_date.setText(null);
+        att_id.requestFocus();
+    }//GEN-LAST:event_newBtnActionPerformed
+
+    private void saveBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_saveBtnActionPerformed
+        // TODO add your handling code here:
+        
+        if(
+           !att_id.getText().trim().isEmpty()&&
+           !std_id.getText().trim().isEmpty()&&
+           !crs_id.getText().trim().isEmpty()&&
+           !att_date.getText().trim().isEmpty()) {
+            int att_id         = Integer.parseInt(this.att_id.getText().trim());
+            int std_id      = Integer.parseInt(this.std_id.getText().trim());
+            int crs_id      = Integer.parseInt(this.crs_id.getText().trim());
+            String temp_date = this.att_date.getText().trim();
+            
+            String string_attDate=temp_date.substring(8,10)+"/"+
+                                temp_date.substring(5,7)+"/"+
+                                temp_date.substring(0,4);
+
+            GregorianCalendar att_date = 
+                    StudentGradingSystemProject.strToGregorianCalendar(
+                     string_attDate);
+            
+            
+           List attendance =StudentGradingSystemProject.attendance; 
+           Attendance att;
+           Boolean found=false;
+           Iterator <Attendance> itr = attendance.iterator();
+           while (itr.hasNext()) {
+              att = itr.next(); 
+              if(att_id==att.getAtt_id()) {
+                found=true;
+                break;
+              }
+            }
+           if (!found) {  
+             // New Student Record  
+             StudentGradingSystemProject.add_attendance(att_id, std_id, crs_id, temp_date);
+             JOptionPane.showMessageDialog(null, "NEW Attendance Record Successfully ADDED!");
+           } else {
+             // found is true! So existing student recort will be updated!!!  
+             StudentGradingSystemProject.edit_attendance(att_id, std_id, crs_id, temp_date);
+             JOptionPane.showMessageDialog(null, "Attendance Record Successfully EDITED!");
+
+           }
+    }                                        
+        else {
+            JOptionPane.showMessageDialog(null, "You have to fill all fields before saving!");
+        }
+        refresh_JTable();
+    }//GEN-LAST:event_saveBtnActionPerformed
+
+    private void att_tableMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_att_tableMouseClicked
+        // TODO add your handling code here:
+        
+        int sel_row= att_table.getSelectedRow();
+        List attendance =StudentGradingSystemProject.attendance;
+        Attendance att;
+        att = (Attendance) attendance.get(sel_row);
+        att_id.setText(""+att.getAtt_id());
+        std_id.setText(""+att.getStd_id());
+        crs_id.setText(""+att.getCrs_id());
+        att_date.setText(att.getAtt_date());
+    }//GEN-LAST:event_att_tableMouseClicked
+    
+   
+    
+    public void refresh_JTable() {
+        
+           List attendance = StudentGradingSystemProject.attendance;
+           DefaultTableModel model = (DefaultTableModel) att_table.getModel();
+           Object rowData[] = new Object[4]; 
+           Iterator itr = attendance.iterator();
+           Attendance att;          
+           model.setNumRows(0); //Remove all existing rows of JTable
+           //Add every element of the List Array as a new row into JTable
+           while (itr.hasNext()) {
+              att = (Attendance) itr.next();
+              rowData[0] = att.getAtt_id();
+              rowData[1] = att.getStd_id();
+              rowData[2] = att.getCrs_id();
+              rowData[3] = att.getAtt_date();
+              
+              model.addRow(rowData);
+           }   
+          }
     /**
      * @param args the command line arguments
      */
@@ -319,11 +471,12 @@ public class AttendanceMgmt extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private com.github.lgooddatepicker.components.DatePicker att_date;
+    private javax.swing.JTextField att_id;
+    private javax.swing.JTable att_table;
     private javax.swing.ButtonGroup buttonGroup1;
-    private com.github.lgooddatepicker.components.DatePicker datePicker1;
-    private javax.swing.JButton jButton1;
-    private javax.swing.JButton jButton2;
-    private javax.swing.JButton jButton3;
+    private javax.swing.JTextField crs_id;
+    private javax.swing.JButton deleteBtn;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel2;
@@ -333,9 +486,8 @@ public class AttendanceMgmt extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel6;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JTable jTable1;
+    private javax.swing.JButton newBtn;
+    private javax.swing.JButton saveBtn;
     private javax.swing.JTextField std_id;
-    private javax.swing.JTextField std_name;
-    private javax.swing.JTextField std_num;
     // End of variables declaration//GEN-END:variables
 }

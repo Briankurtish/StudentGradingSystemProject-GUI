@@ -32,6 +32,7 @@ public class StudentGradingSystemProject {
         create_courses();
         create_department();
         create_grades();
+        create_attendance();
         
         new Menu().setVisible(true);
         

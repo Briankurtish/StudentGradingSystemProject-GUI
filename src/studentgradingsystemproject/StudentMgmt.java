@@ -489,8 +489,8 @@ public class StudentMGMT extends javax.swing.JFrame {
         Student st;
         st = (Student) students.get(sel_row);
         std_id.setText(""+st.getStd_id());
-        std_name.setText(st.getStd_no());
-        std_num.setText(st.getStd_name());
+        std_name.setText(st.getStd_name());
+        std_num.setText(st.getStd_no());
         std_surname.setText(st.getStd_surname());
         nationality.setText(st.getNationality());
         if (st.getGender()=='M') maleRadio.setSelected(true);
