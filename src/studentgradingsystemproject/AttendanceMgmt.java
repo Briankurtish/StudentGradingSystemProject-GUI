@@ -11,6 +11,7 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.Iterator;
 import java.util.List;
@@ -349,8 +350,7 @@ public class AttendanceMgmt extends javax.swing.JFrame {
         if(
            !att_id.getText().trim().isEmpty()&&
            !std_id.getText().trim().isEmpty()&&
-           !crs_id.getText().trim().isEmpty()&&
-           !att_date.getText().trim().isEmpty()) {
+           !crs_id.getText().trim().isEmpty()) {
             int att_id         = Integer.parseInt(this.att_id.getText().trim());
             int std_id      = Integer.parseInt(this.std_id.getText().trim());
             int crs_id      = Integer.parseInt(this.crs_id.getText().trim());
@@ -378,11 +378,11 @@ public class AttendanceMgmt extends javax.swing.JFrame {
             }
            if (!found) {  
              // New Student Record  
-             StudentGradingSystemProject.add_attendance(att_id, std_id, crs_id, temp_date);
+             StudentGradingSystemProject.add_attendance(att_id, std_id, crs_id, att_date);
              JOptionPane.showMessageDialog(null, "NEW Attendance Record Successfully ADDED!");
            } else {
              // found is true! So existing student recort will be updated!!!  
-             StudentGradingSystemProject.edit_attendance(att_id, std_id, crs_id, temp_date);
+             StudentGradingSystemProject.edit_attendance(att_id, std_id, crs_id, att_date);
              JOptionPane.showMessageDialog(null, "Attendance Record Successfully EDITED!");
 
            }
@@ -403,10 +403,66 @@ public class AttendanceMgmt extends javax.swing.JFrame {
         att_id.setText(""+att.getAtt_id());
         std_id.setText(""+att.getStd_id());
         crs_id.setText(""+att.getCrs_id());
-        att_date.setText(att.getAtt_date());
+        Date dt = att.getAtt_date().getTime();
+        String att_d = dateToString(dt);
+        att_date.setText(att_d);
+        
     }//GEN-LAST:event_att_tableMouseClicked
     
-   
+   public String dateToString(Date d_date) {
+    String temp_date, conv_date=null;
+    temp_date = StudentGradingSystemProject.fmt.format(d_date);
+    // Required format is like: May 15, 2021
+    switch (temp_date.substring(3,5)) {
+        case "01": conv_date="January "+temp_date.substring(0,2)+", "+
+                temp_date.substring(6,10); break;
+        case "02": conv_date="February "+temp_date.substring(0,2)+", "+
+                temp_date.substring(6,10); break;        
+        case "03": conv_date="March "+temp_date.substring(0,2)+", "+
+                temp_date.substring(6,10); break;                
+        case "04": conv_date="April "+temp_date.substring(0,2)+", "+
+                temp_date.substring(6,10); break;                
+        case "05": conv_date="May "+temp_date.substring(0,2)+", "+
+                temp_date.substring(6,10); break;                
+        case "06": conv_date="June "+temp_date.substring(0,2)+", "+
+                temp_date.substring(6,10); break;                
+        case "07": conv_date="July "+temp_date.substring(0,2)+", "+
+                temp_date.substring(6,10); break;                
+        case "08": conv_date="August "+temp_date.substring(0,2)+", "+
+                temp_date.substring(6,10); break;                
+        case "09": conv_date="September "+temp_date.substring(0,2)+", "+
+                temp_date.substring(6,10); break;                
+        case "10": conv_date="October "+temp_date.substring(0,2)+", "+
+                temp_date.substring(6,10); break;                
+        case "11": conv_date="November "+temp_date.substring(0,2)+", "+
+                temp_date.substring(6,10); break;                
+        case "12": conv_date="December "+temp_date.substring(0,2)+", "+
+                temp_date.substring(6,10); break;                
+    }
+    return conv_date;    
+    }
+    
+    /*
+    DateFormatConverter will convert the date format 
+    from "May 15, 2021" to 15/05/2021
+    */
+    public String DateFormatConverter(String s_date) {
+    String dd=null, mm=null, yyyy=null;
+    int w_start=0;
+    for (int i=0; i<s_date.length(); i++) {
+        if(s_date.charAt(i)==' ') {
+           if(mm==null) {
+               mm= s_date.substring(w_start, i);
+               w_start=i+1;
+           } else if (dd==null) {
+               dd=s_date.substring(w_start, i-1); // Do not get "," character
+               w_start=i+1;
+           }
+       }
+    }  
+       yyyy=s_date.substring(w_start, s_date.length());
+       return dd+"/"+mm+"/"+yyyy;    
+    }
     
     public void refresh_JTable() {
         
@@ -422,7 +478,7 @@ public class AttendanceMgmt extends javax.swing.JFrame {
               rowData[0] = att.getAtt_id();
               rowData[1] = att.getStd_id();
               rowData[2] = att.getCrs_id();
-              rowData[3] = att.getAtt_date();
+              rowData[3] = StudentGradingSystemProject.fmt.format(att.getAtt_date().getTime());
               
               model.addRow(rowData);
            }   

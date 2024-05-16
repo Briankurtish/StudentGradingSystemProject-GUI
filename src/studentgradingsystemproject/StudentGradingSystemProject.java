@@ -27,7 +27,6 @@ public class StudentGradingSystemProject {
         
         fmt = new SimpleDateFormat("dd/MM/yyyy");        
         
-        //test_students();
         create_students();
         create_courses();
         create_department();
@@ -205,14 +204,14 @@ public class StudentGradingSystemProject {
     
     public static void create_attendance(){
         System.out.printf("\n Add Attendance()\n\n");
-        add_attendance(1,1,1, "09/04/2021");           
-        add_attendance(2,2,1, "09/04/2021"); 
-        add_attendance(3,3,2, "09/04/2021");           
-        add_attendance(4,4,1, "09/04/2021"); 
-        add_attendance(5,5,1, "09/04/2021");           
-        add_attendance(6,1,1, "12/04/2021"); 
-        add_attendance(7,2,1, "12/04/2021");           
-        add_attendance(5,5,1, "12/04/2021"); 
+        add_attendance(1,1,1, strToGregorianCalendar("09/04/2021"));           
+        add_attendance(2,2,1, strToGregorianCalendar("09/04/2021")); 
+        add_attendance(3,3,2, strToGregorianCalendar("09/04/2021"));           
+        add_attendance(4,4,1, strToGregorianCalendar("09/04/2021")); 
+        add_attendance(5,5,1, strToGregorianCalendar("09/04/2021"));           
+        add_attendance(6,1,1, strToGregorianCalendar("12/04/2021")); 
+        add_attendance(7,2,1, strToGregorianCalendar("12/04/2021"));           
+        add_attendance(5,5,1, strToGregorianCalendar("12/04/2021")); 
 
 
         System.out.printf("\n List All Attendances()\n\n");
@@ -477,14 +476,14 @@ public class StudentGradingSystemProject {
     }
     
     
-    public static void add_attendance(int id, int std_id, int crs_id, String att_date){
+    public static void add_attendance(int id, int std_id, int crs_id, GregorianCalendar att_date){
         Attendance att = new Attendance(id, std_id, crs_id, att_date);
         
         attendance.add(att);
     }
     
     
-    public static void edit_attendance(int id, int std_id, int crs_id, String att_date){
+    public static void edit_attendance(int id, int std_id, int crs_id, GregorianCalendar att_date){
         
         Attendance att = null;
         Boolean found = false;
@@ -533,7 +532,7 @@ public class StudentGradingSystemProject {
         
         while(itr.hasNext()){
             att = itr.next();
-            System.out.printf("\n%2s %5s %5s %13s", att.getAtt_id(), att.getStd_id(), att.getCrs_id(), att.getAtt_date());
+            System.out.printf("\n%2s %5s %5s %13s", att.getAtt_id(), att.getStd_id(), att.getCrs_id(), fmt.format(att.getAtt_date().getTime()));
         }
         draw_line(79);
     }

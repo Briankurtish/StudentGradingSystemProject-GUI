@@ -322,6 +322,12 @@ public class DeptMgmt extends javax.swing.JFrame {
 
     private void dept_tableMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_dept_tableMouseClicked
         // TODO add your handling code here:
+        int sel_row= dept_table.getSelectedRow();
+        List departments =StudentGradingSystemProject.departments;
+        Department dept;
+        dept = (Department) departments.get(sel_row);
+        dept_id.setText(""+dept.getDept_id());
+        dept_name.setText(dept.getDept_name());
     }//GEN-LAST:event_dept_tableMouseClicked
     
     public void refresh_JTable() {

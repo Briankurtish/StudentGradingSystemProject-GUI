@@ -6,6 +6,7 @@ package studentgradingsystemproject;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.GregorianCalendar;
 
 /**
  *
@@ -15,9 +16,9 @@ public class Attendance implements Serializable{
     private int att_id;
     private int std_id;
     private int crs_id;
-    private String att_date;
+    private GregorianCalendar att_date;
 
-    public Attendance(int att_id, int std_id, int crs_id, String att_date) {
+    public Attendance(int att_id, int std_id, int crs_id, GregorianCalendar att_date) {
         this.att_id = att_id;
         this.std_id = std_id;
         this.crs_id = crs_id;
@@ -48,13 +49,15 @@ public class Attendance implements Serializable{
         this.crs_id = crs_id;
     }
 
-    public String getAtt_date() {
+    public GregorianCalendar getAtt_date() {
         return att_date;
     }
 
-    public void setAtt_date(String att_date) {
+    public void setAtt_date(GregorianCalendar att_date) {
         this.att_date = att_date;
     }
+
+    
     
     
     
